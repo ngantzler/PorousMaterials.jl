@@ -8,3 +8,4 @@
 *.jld2
 docs/build/
 docs/site/
+docs/win_make.jl
