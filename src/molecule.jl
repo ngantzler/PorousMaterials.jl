@@ -1,3 +1,30 @@
+#using Xtals
+
+"""
+    atomic_masses = read_atomic_masses()
+
+Read the `data/atomicmasses.csv` file to construct a dictionary of atoms and their atomic
+masses in amu.
+
+# Returns
+- `atomic_masses::Dict{Symbol, Float64}`: A dictionary containing the atomic masses of each atom stored in `data/atomicmasses.csv`
+"""
+function read_atomic_masses()
+    if ! isfile(joinpath(Xtals.PATH_TO_DATA, "atomicmasses.csv"))
+        error("Cannot find atomicmasses.csv file in your data folder\n")
+    end
+
+    df_am = CSV.read(joinpath(Xtals.PATH_TO_DATA, "atomicmasses.csv"), DataFrame)
+
+    atomic_masses = Dict{Symbol, Float64}()
+
+    for row in eachrow(df_am)
+		atomic_masses[Symbol(row[:atom])] = row[:mass]
+    end
+
+    return atomic_masses
+end
+
 function _define_atomic_mass()
     global ATOMIC_MASS = read_atomic_masses() # for center-of-mass calcs
 end
@@ -91,17 +118,6 @@ end
 # documented in matter.jl
 net_charge(molecule::Molecule) = net_charge(molecule.charges)
 
-# convert between fractional and cartesian coords
-Frac(molecule::Molecule{Cart}, box::Box) = Molecule(molecule.species,
-                                                    Frac(molecule.atoms,   box),
-                                                    Frac(molecule.charges, box),
-                                                    Frac(molecule.com,     box)
-                                                   )
-Cart(molecule::Molecule{Frac}, box::Box) = Molecule(molecule.species,
-                                                    Cart(molecule.atoms,   box),
-                                                    Cart(molecule.charges, box),
-                                                    Cart(molecule.com,     box)
-                                                   )
 
  # """
  #     write_xyz(molecules, xyz_file)
@@ -303,6 +319,19 @@ has_charges(molecule::Molecule) = molecule.charges.n > 0
 
 # documented in forcefield.jl
 forcefield_coverage(molecule::Molecule, ljff::LJForceField) = forcefield_coverage(molecule.atoms, ljff)
+
+# adding to the Frac and Cart constructors in Xtals.jl
+# convert between fractional and cartesian coords
+Frac(molecule::Molecule{Cart}, box::Box) = Molecule(molecule.species,
+                                                    Frac(molecule.atoms,   box),
+                                                    Frac(molecule.charges, box),
+                                                    Frac(molecule.com,     box)
+                                                   )
+Cart(molecule::Molecule{Frac}, box::Box) = Molecule(molecule.species,
+                                                    Cart(molecule.atoms,   box),
+                                                    Cart(molecule.charges, box),
+                                                    Cart(molecule.com,     box)
+                                                   )
 
 """
     molecule = ion(q, coords)

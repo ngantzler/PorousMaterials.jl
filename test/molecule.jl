@@ -1,6 +1,7 @@
 module Molecule_Test
 
 using PorousMaterials
+using Xtals
 using OffsetArrays
 using LinearAlgebra
 using Test

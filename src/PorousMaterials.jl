@@ -16,6 +16,7 @@ using LightGraphs
 using Distributed
 using Optim
 using PyCall
+using Xtals
  # import Base.push!
  # 
 
@@ -28,8 +29,8 @@ const R²_OVERLAP = 0.1 # Units: Angstrom²
 print off paths where PorousMaterials.jl looks for input files and writes output files.
 """
 function print_file_paths()
-    println("general data folder: ", PATH_TO_DATA)
-    println("\tcrystal structures (.cif, .cssr): ", PATH_TO_CRYSTALS)
+    println("general data folder: ", Xtals.PATH_TO_DATA)
+    println("\tcrystal structures (.cif, .cssr): ", Xtals.PATH_TO_CRYSTALS)
     println("\tforce field files (.csv): ", PATH_TO_FORCEFIELDS)
     println("\tmolecule input files: ", PATH_TO_MOLECULES)
     println("\tsimulation output files: ", PATH_TO_SIMS)
@@ -43,13 +44,15 @@ set the `PATH_TO_DATA` variable.
 this adjusts the path to crystals, forcefields, molecules, grids, and simulation output files.
 """
 function set_path_to_data(ptd::String; print_paths::Bool=true)
-    global PATH_TO_DATA = ptd
+    #global PATH_TO_DATA = ptd
+    # using Xtals.PATH_TO_DATA in PorousMaterials to simplify
+    @eval Xtals PATH_TO_DATA = ptd
 
-    global PATH_TO_CRYSTALS = joinpath(PATH_TO_DATA, "crystals")
-    global PATH_TO_FORCEFIELDS = joinpath(PATH_TO_DATA, "forcefields")
-    global PATH_TO_MOLECULES = joinpath(PATH_TO_DATA, "molecules")
-    global PATH_TO_GRIDS = joinpath(PATH_TO_DATA, "grids")
-    global PATH_TO_SIMS = joinpath(PATH_TO_DATA, "simulations")
+    #global PATH_TO_CRYSTALS = joinpath(PATH_TO_DATA, "crystals")
+    global PATH_TO_FORCEFIELDS = joinpath(Xtals.PATH_TO_DATA, "forcefields")
+    global PATH_TO_MOLECULES = joinpath(Xtals.PATH_TO_DATA, "molecules")
+    global PATH_TO_GRIDS = joinpath(Xtals.PATH_TO_DATA, "grids")
+    global PATH_TO_SIMS = joinpath(Xtals.PATH_TO_DATA, "simulations")
     
     if print_paths
         print_file_paths()
@@ -64,13 +67,15 @@ to see current set up, call [`print_file_paths`](@ref)
 """
 function set_default_file_paths(;print_paths::Bool=true)
     # this is the main directory where crystal structures, forcefields, and molecules data is stored
-    global PATH_TO_DATA = joinpath(pwd(), "data")
+    #global PATH_TO_DATA = joinpath(pwd(), "data")
+    # using Xtals.PATH_TO_DATA in PorousMaterials to simplify
+    @eval Xtals PATH_TO_DATA = joinpath(pwd(), "data")
 
-    global PATH_TO_CRYSTALS = joinpath(PATH_TO_DATA, "crystals")
-    global PATH_TO_FORCEFIELDS = joinpath(PATH_TO_DATA, "forcefields")
-    global PATH_TO_MOLECULES = joinpath(PATH_TO_DATA, "molecules")
-    global PATH_TO_GRIDS = joinpath(PATH_TO_DATA, "grids")
-    global PATH_TO_SIMS = joinpath(PATH_TO_DATA, "simulations")
+    #global PATH_TO_CRYSTALS = joinpath(PATH_TO_DATA, "crystals")
+    global PATH_TO_FORCEFIELDS = joinpath(Xtals.PATH_TO_DATA, "forcefields")
+    global PATH_TO_MOLECULES = joinpath(Xtals.PATH_TO_DATA, "molecules")
+    global PATH_TO_GRIDS = joinpath(Xtals.PATH_TO_DATA, "grids")
+    global PATH_TO_SIMS = joinpath(Xtals.PATH_TO_DATA, "simulations")
     
     if print_paths
         print_file_paths()
@@ -105,13 +110,13 @@ end
  #     end
  # end
  # 
-include("matter.jl")
-include("box.jl")
-include("distance.jl")
-include("misc.jl")
+#include("matter.jl")
+#include("box.jl")
+#include("distance.jl")
+#include("misc.jl")
 include("isotherm_fitting.jl")
-include("crystal.jl")
-include("bonds.jl")
+#include("crystal.jl")
+#include("bonds.jl")
 include("forcefield.jl")
 include("molecule.jl")
 include("energy_utilities.jl")
@@ -129,28 +134,28 @@ export
     print_file_paths, set_path_to_data,
     
     # matter.jl
-    Coords, Frac, Cart, Atoms, Charges, wrap!, neutral, net_charge, translate_by!, origin,
+#    Coords, Frac, Cart, Atoms, Charges, wrap!, neutral, net_charge, translate_by!, origin,
     
     # box.jl
-    Box, replicate, unit_cube, write_vtk, inside, fractional_coords, cartesian_coords,
+#    Box, replicate, unit_cube, write_vtk, inside, fractional_coords, cartesian_coords,
 
     # distance.jl
-    nearest_image!, distance, overlap, remove_duplicates,
+#    nearest_image!, distance, overlap, remove_duplicates,
 
     # misc.jl
-    read_xyz, read_cpk_colors, write_xyz, read_atomic_masses,
+#    read_xyz, read_cpk_colors, write_xyz, read_atomic_masses,
     
     # isotherm_fitting.jl
     fit_adsorption_isotherm,
 
     # crystal.jl
-    Crystal, strip_numbers_from_atom_labels!, assign_charges,
-    chemical_formula, molecular_weight, crystal_density, write_cif, has_charges,
-    apply_symmetry_operations, 
+#    Crystal, strip_numbers_from_atom_labels!, assign_charges,
+#    chemical_formula, molecular_weight, crystal_density, write_cif, has_charges,
+#    apply_symmetry_operations, 
 
     # bonds.jl
-    infer_bonds!, write_bond_information, BondingRule, bond_sanity_check, remove_bonds!, 
-    infer_geometry_based_bonds!, cordero_covalent_atomic_radii,
+#    infer_bonds!, write_bond_information, BondingRule, bond_sanity_check, remove_bonds!, 
+#    infer_geometry_based_bonds!, cordero_covalent_atomic_radii,
 
  #     construct_box,
  #     replicate, read_atomic_masses, charged, write_cif, assign_charges,
@@ -163,7 +168,7 @@ export
  #     partition_framework, subtract_atoms,
  # 
     # molecule.jl
-    Molecule, translate_by!, translate_to!, random_rotation!, random_rotation_matrix, ion, distortion,
+    read_atomic_masses, Molecule, translate_by!, translate_to!, random_rotation!, random_rotation_matrix, ion, distortion, has_charges,
   
     # forcefield.jl
     LJForceField, replication_factors, forcefield_coverage,
