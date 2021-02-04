@@ -1,5 +1,6 @@
 using Distributed
 using PorousMaterials
+using Xtals
 using Test
 using CSV
 using DataFrames

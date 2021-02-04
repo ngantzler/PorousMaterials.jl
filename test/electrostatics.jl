@@ -1,6 +1,7 @@
 module Electrostatics_Energetics_Test
 
 using PorousMaterials
+using Xtals
 using OffsetArrays
 using LinearAlgebra
 using Test

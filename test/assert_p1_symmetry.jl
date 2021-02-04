@@ -1,6 +1,7 @@
 module Simulation_Rules_Test
 
 using PorousMaterials
+using Xtals
 using Test
 
 # Test set for making sure simulations meet certain rules
