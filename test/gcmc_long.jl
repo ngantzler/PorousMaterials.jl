@@ -1,5 +1,6 @@
 using Distributed
 @everywhere using PorousMaterials
+@everywhere using Xtals
 @everywhere using Test
 using CSV
 using DataFrames
