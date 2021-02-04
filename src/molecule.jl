@@ -148,23 +148,23 @@ net_charge(molecule::Molecule) = net_charge(molecule.charges)
  # end
 
 # documented in matter.jl
-function translate_by!(molecule::Molecule{Cart}, dx::Cart)
+function Xtals.translate_by!(molecule::Molecule{Cart}, dx::Cart)
     translate_by!(molecule.atoms.coords,   dx)
     translate_by!(molecule.charges.coords, dx)
     translate_by!(molecule.com,            dx)
 end
 
-function translate_by!(molecule::Molecule{Frac}, dxf::Frac)
+function Xtals.translate_by!(molecule::Molecule{Frac}, dxf::Frac)
     translate_by!(molecule.atoms.coords,   dxf)
     translate_by!(molecule.charges.coords, dxf)
     translate_by!(molecule.com,            dxf)
 end
 
-function translate_by!(molecule::Molecule{Cart}, dxf::Frac, box::Box)
+function Xtals.translate_by!(molecule::Molecule{Cart}, dxf::Frac, box::Box)
     translate_by!(molecule, Cart(dxf, box))
 end
 
-function translate_by!(molecule::Molecule{Frac}, dx::Cart, box::Box)
+function Xtals.translate_by!(molecule::Molecule{Frac}, dx::Cart, box::Box)
     translate_by!(molecule, Frac(dx, box))
 end
 
@@ -287,11 +287,11 @@ function random_rotation!(molecule::Molecule{Frac}, box::Box)
 end
 
 # based on center of mass
-inside(molecule::Molecule{Cart}, box::Box) = inside(molecule.com, box)
-inside(molecule::Molecule{Frac}) = inside(molecule.com)
+Xtals.inside(molecule::Molecule{Cart}, box::Box) = inside(molecule.com, box)
+Xtals.inside(molecule::Molecule{Frac}) = inside(molecule.com)
 
 # docstring in Misc.jl
-function write_xyz(molecules::Array{Molecule{Cart}, 1}, filename::AbstractString;
+function Xtals.write_xyz(molecules::Array{Molecule{Cart}, 1}, filename::AbstractString;
     comment::AbstractString="")
     
     # append all atoms of the molecule together
@@ -303,7 +303,7 @@ function write_xyz(molecules::Array{Molecule{Cart}, 1}, filename::AbstractString
     end
     
     # send to write_xyz for writing atoms in Cartesian coords.
-    write_xyz(atoms, filename, comment=comment) # Misc.jl
+    Xtals.write_xyz(atoms, filename, comment=comment) # Misc.jl
 end
 
 function write_xyz(molecules::Array{Molecule{Frac}, 1}, box::Box, filename::AbstractString;
@@ -315,7 +315,7 @@ function write_xyz(molecules::Array{Molecule{Frac}, 1}, box::Box, filename::Abst
 end
 
 # documented in crystal.jl
-has_charges(molecule::Molecule) = molecule.charges.n > 0
+Xtals.has_charges(molecule::Molecule) = molecule.charges.n > 0
 
 # documented in forcefield.jl
 forcefield_coverage(molecule::Molecule, ljff::LJForceField) = forcefield_coverage(molecule.atoms, ljff)
