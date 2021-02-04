@@ -57,7 +57,7 @@ end
     fluid = PengRobinsonFluid(fluid)
 
 Reads in critical temperature, critical pressure, and acentric factor of the `fluid::Symbol`
-from the properties .csv file `joinpath(PorousMaterials.PATH_TO_DATA, "PengRobinson_fluid_props.csv")`
+from the properties .csv file `joinpath(Xtals.PATH_TO_DATA, "PengRobinson_fluid_props.csv")`
 and returns a complete `PengRobinsonFluid` data structure.
 **NOTE: Do not delete the last three comment lines in PengRobinson_fluid_props.csv
 
@@ -68,10 +68,10 @@ and returns a complete `PengRobinsonFluid` data structure.
 - `PengRobinsonFluid::struct`: Data structure containing Peng-Robinson fluid parameters.
 """
 function PengRobinsonFluid(fluid::Symbol)
-    df = CSV.read(joinpath(PATH_TO_DATA, "PengRobinson_fluid_props.csv"), DataFrame, copycols=true, comment="#")
+    df = CSV.read(joinpath(Xtals.PATH_TO_DATA, "PengRobinson_fluid_props.csv"), DataFrame, copycols=true, comment="#")
     filter!(row -> row[:fluid] == string(fluid), df)
     if nrow(df) == 0
-        error(@sprintf("fluid %s properties not found in %sPengRobinson_fluid_props.csv", fluid, PATH_TO_DATA))
+        error(@sprintf("fluid %s properties not found in %sPengRobinson_fluid_props.csv", fluid, Xtals.PATH_TO_DATA))
     end
     Tc = df[1, Symbol("Tc(K)")]
     Pc = df[1, Symbol("Pc(bar)")]
@@ -137,7 +137,7 @@ end
     fluid = VdWFluid(fluid)
 
 Reads in van der Waals constants of the `fluid::Symbol`
-from the properties .csv file `joinpath(PorousMaterials.PATH_TO_DATA, "VdW_fluid_props.csv")`
+from the properties .csv file `joinpath(Xtals.PATH_TO_DATA, "VdW_fluid_props.csv")`
 and returns a complete `VdWFluid` data structure.
 ***NOTE: Do not delete the last three comment lines in VdW_fluid_props.csv
 
@@ -148,10 +148,10 @@ and returns a complete `VdWFluid` data structure.
 - `VdWFluid::struct`: Data structure containing van der Waals constants
 """
 function VdWFluid(fluid::Symbol)
-    df = CSV.read(joinpath(PATH_TO_DATA, "VdW_fluid_props.csv"), DataFrame, copycols=true, comment="#")
+    df = CSV.read(joinpath(Xtals.PATH_TO_DATA, "VdW_fluid_props.csv"), DataFrame, copycols=true, comment="#")
     filter!(row -> row[:fluid] == string(fluid), df)
     if nrow(df) == 0
-        error(@sprintf("Fluid %s constants not found in %sVdW_fluidops.csv", fluid, PATH_TO_DATA))
+        error(@sprintf("Fluid %s constants not found in %sVdW_fluidops.csv", fluid, Xtals.PATH_TO_DATA))
     end
     a = df[1, Symbol("a(bar*m^6/mol^2)")]
     b = df[1, Symbol("b(m^3/mol)")]
